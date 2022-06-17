@@ -2,7 +2,7 @@ pragma solidity =0.5.16;
 
 import './interfaces/IUniswapV2ERC20.sol';
 import './libraries/SafeMath.sol';
-
+// 流动性代币合约
 contract UniswapV2ERC20 is IUniswapV2ERC20 {
     using SafeMath for uint;
 
@@ -36,13 +36,13 @@ contract UniswapV2ERC20 is IUniswapV2ERC20 {
             )
         );
     }
-
+  // 铸造
     function _mint(address to, uint value) internal {
         totalSupply = totalSupply.add(value);
         balanceOf[to] = balanceOf[to].add(value);
         emit Transfer(address(0), to, value);
     }
-
+ // 销毁
     function _burn(address from, uint value) internal {
         balanceOf[from] = balanceOf[from].sub(value);
         totalSupply = totalSupply.sub(value);
