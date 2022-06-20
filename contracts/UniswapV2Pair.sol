@@ -25,7 +25,9 @@ contract UniswapV2Pair is IUniswapV2Pair, UniswapV2ERC20 {
 
     uint public price0CumulativeLast;
     uint public price1CumulativeLast;
-    uint public kLast; // reserve0 * reserve1, as of immediately after the most recent liquidity event
+    // 这里是用恒定乘积做做市商模型 其实也就是 x*y=k ，x 就是当前对币A储存量/流动性，在不增加流动性的前提下，k值是不变的
+    // reserve0 * reserve1, as of immediately after the most recent liquidity event
+    uint public kLast; 
 
     uint private unlocked = 1;
         // 锁 防止重入
@@ -79,7 +81,7 @@ contract UniswapV2Pair is IUniswapV2Pair, UniswapV2ERC20 {
         uint32 blockTimestamp = uint32(block.timestamp % 2**32);
         // 计算与上一次更新的区块时间之间的时间差
         uint32 timeElapsed = blockTimestamp - blockTimestampLast; // overflow is desired
-        
+
         if (timeElapsed > 0 && _reserve0 != 0 && _reserve1 != 0) {
             // * never overflows, and + overflow is desired
             price0CumulativeLast += uint(UQ112x112.encode(_reserve1).uqdiv(_reserve0)) * timeElapsed;
